@@ -84,6 +84,19 @@ def findPalindrome3(string):
     if bigPals == '': return None
     return bigPals
 
+def findPalindrome(string):
+
+    s  = None 
+    s2 = findPalindrome2(string)
+    s3 = findPalindrome3(string)
+
+    s = s2 if s2 is not None else None
+    s = s3 if s3 is not None and \
+            ( (s is None)    or  \
+              (s is not None and len(s3)>len(s))) \
+            else s
+
+    return s
 
 if __name__ == '__main__':
  
@@ -95,6 +108,10 @@ if __name__ == '__main__':
 
     print 'Finding for 3'
     print findPalindrome3(inp)
+
+    print 'Finding for all'
+    print findPalindrome(inp)
+
 
  
     print 'done'
