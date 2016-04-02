@@ -1,1 +1,3 @@
-# Program for finding the longest Palindrome in the 
+# Longest Palindrome in a string
+
+This is going to be a command line tool. 
