@@ -1,4 +1,16 @@
 import sys
+import argparse 
+
+helpString = '''
+usage: pal.py [-h] [-v] string [string ...]
+
+positional arguments:
+  string         The string to search a palindrome in
+
+optional arguments:
+  -h, --help     show this help message and exit
+  -v, --verbose  provide detailed program output
+'''
 
 def inputString():
     '''
@@ -13,13 +25,54 @@ def inputString():
 
         We may need to change this functionallity later ...
 
+        Edit: 
+        In this version of the input, we are going to add 
+        optinal arguments parsing using argparse. We shall
+        have the following arguments:
+
+            -h and --help: with argparse, we get it for free
+            -v and --verbose: will show detailed program execution
+
+        Verbosity level:
+
+            0 = quiet output
+                given an empty string, it will return an error 
+                   this is the default behavior of the `argparse`
+                   library and is not a default behavior of the program
+                given a string with no palindromes in it, it will 
+                return the first character of the string
+
+            1 = print semantics such as the input string and that
+                the string has no palindrome etc. It will also
+                identify the location of the palindrome within the 
+                string.
+
+            2 = This is going to give detailed program execution output.  
+
+
     '''
  
-    string = ''.join(sys.argv[1:]).lower()
-    string = filter( str.isalpha, string )
-    return string
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-v', '--verbose', 
+        help    = 'provide detailed program output',
+        action  = 'count',
+        default = 0)
+    parser.add_argument('string', 
+        help = 'The string to search a palindrome in',
+        nargs='+')
 
-def findPalindrome2(string):
+    args = parser.parse_args()
+    string = ''.join(args.string)
+    string = filter(str.isalpha, string.lower())
+
+    return { 
+        'string': string,
+        'verbose': args.verbose
+    }
+
+
+
+def findPalindrome2(string, verbose=0):
     '''
         This function is used for finding the biggest
         palindrome within a string. It does a grouping
@@ -59,7 +112,7 @@ def findPalindrome2(string):
 
     return bigPals
 
-def findPalindrome3(string):
+def findPalindrome3(string, verbose=0):
     '''
         This function finds the biggest palindrome
         in a string by starting with groupings of 3
@@ -84,7 +137,7 @@ def findPalindrome3(string):
     if bigPals == '': return None
     return bigPals
 
-def findPalindrome(string):
+def findPalindrome(string, verbose=0):
 
     s  = None 
     s2 = findPalindrome2(string)
@@ -100,20 +153,27 @@ def findPalindrome(string):
 
 if __name__ == '__main__':
  
-    inp = inputString()
-    print zip(inp, range(len(inp)))
-    
-    print 'Finding for 2'
-    print findPalindrome2(inp)
+    inpDict = inputString()
+    inp     = inpDict['string']
+    verbose = inpDict['verbose']
 
-    print 'Finding for 3'
-    print findPalindrome3(inp)
+    if verbose > 0:
+        print 'Input String: [%s]'%inp 
 
-    print 'Finding for all'
-    print findPalindrome(inp)
+    if verbose > 1:
+        print 'Finding the palindrome within the string ...'
+    pal = findPalindrome(inp, verbose)
 
+    if pal is None:
+        if verbose > 0:
+            print 'A real palindrome isn`t present. Please consider [%s] as a palindrome ...'%inp[0]
+        else:
+            print inp[0]
+    else:
+        if verbose > 0:
+            print 'Palindrome found: [%s]'%pal
+            print 'Palindrome within the string:', ('['+pal+']').join( inp.split(pal) )
+        else:
+            print inp[0]
 
  
-    print 'done'
-
-
