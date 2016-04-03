@@ -122,7 +122,7 @@ def findPalindrome3(string, verbose=0):
         print '\t\tSearching for the longest odd palindrome'
 
     bigPals = ''
-    for i in range(1, len(string)-2):
+    for i in range(1, len(string)-1):
         if string[i-1] != string[i+1]: continue
 
         if verbose > 1:
@@ -201,5 +201,3 @@ if __name__ == '__main__':
             print 'Palindrome within the string:', ('['+pal+']').join( inp.split(pal) )
         else:
             print inp[0]
-
- 
