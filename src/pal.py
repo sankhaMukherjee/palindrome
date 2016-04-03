@@ -1,17 +1,6 @@
 import sys
 import argparse 
 
-helpString = '''
-usage: pal.py [-h] [-v] string [string ...]
-
-positional arguments:
-  string         The string to search a palindrome in
-
-optional arguments:
-  -h, --help     show this help message and exit
-  -v, --verbose  provide detailed program output
-'''
-
 def inputString():
     '''
         This function takes the arguments provided to the program
