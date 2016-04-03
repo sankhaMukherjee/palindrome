@@ -70,8 +70,6 @@ def inputString():
         'verbose': args.verbose
     }
 
-
-
 def findPalindrome2(string, verbose=0):
     '''
         This function is used for finding the biggest
@@ -85,10 +83,18 @@ def findPalindrome2(string, verbose=0):
             return string
         else:
             return None
+
+    if verbose > 1:
+        print '\t\tSearching for the longest even palindrome'
+
  
     bigPals = ''
     for i in range(len(string)-1):
         if string[i] != string[i+1]: continue
+
+        if verbose > 1:
+            print '\t\t\tInitial match found: ', string[i:i+1+1]
+
  
         # ok, lets start adding the palindromes ...
         if len(bigPals) < len(string[i:i+2]):
@@ -108,6 +114,9 @@ def findPalindrome2(string, verbose=0):
                 if len(bigPals) < len(string[i-j+1: i+j+1]):
                     bigPals = string[i-j+1: i+j+1]
 
+            if verbose > 1:
+                print '\t\t\t\tNew match:', string[i-j+1: i+j+1]
+
     if bigPals == '': return None
 
     return bigPals
@@ -120,19 +129,28 @@ def findPalindrome3(string, verbose=0):
 
     if len(string) < 3: return None
 
+    if verbose > 1:
+        print '\t\tSearching for the longest odd palindrome'
+
     bigPals = ''
     for i in range(1, len(string)-2):
         if string[i-1] != string[i+1]: continue
 
+        if verbose > 1:
+            print '\t\t\tInitial match found: ', string[i-1:i+1+1]
+
+
         # We are in palindrome territory ...
-        if len(string[i-1:i+1+1]) > bigPals: bigPals = string[i-1:i+1+1]
+        if len(string[i-1:i+1+1]) > len(bigPals): bigPals = string[i-1:i+1+1]
         # print string[i-1:i+1+1]
         for j in range(2, len(string)):
             if i-j < 0: break
             if i+j >= len(string): break
             if string[i-j] != string[i+j]: break
             if len(string[i-j:i+j+1]) > len(bigPals): bigPals = string[i-j:i+j+1]
-            # print string[i-j], string[i+j], string[i-j:i+j+1]
+
+            if verbose > 1:
+                print '\t\t\t\tNew match:', string[i-j:i+j+1]
 
     if bigPals == '': return None
     return bigPals
@@ -140,14 +158,33 @@ def findPalindrome3(string, verbose=0):
 def findPalindrome(string, verbose=0):
 
     s  = None 
-    s2 = findPalindrome2(string)
-    s3 = findPalindrome3(string)
+    s2 = findPalindrome2(string, verbose)
+    s3 = findPalindrome3(string, verbose)
+
+    if verbose > 1:
+        if s2 is not None:
+            print '\tLongest even palindrome: ', s2
+        else:
+            print '\tEven palindromes not present'
+
+    if verbose > 1:
+        if s3 is not None:
+            print '\tLongest odd palindrome: ', s3
+        else:
+            print '\tOdd palindromes not present'
+
 
     s = s2 if s2 is not None else None
     s = s3 if s3 is not None and \
             ( (s is None)    or  \
               (s is not None and len(s3)>len(s))) \
             else s
+
+    if verbose > 1:
+        if s is not None:
+            print '\tLongest palindrome selected: ', s
+        else:
+            print '\tPalindrome not present'
 
     return s
 
@@ -166,7 +203,7 @@ if __name__ == '__main__':
 
     if pal is None:
         if verbose > 0:
-            print 'A real palindrome isn`t present. Please consider [%s] as a palindrome ...'%inp[0]
+            print 'A real palindrome isn`t present. Please consider [%s] to be a palindrome ...'%inp[0]
         else:
             print inp[0]
     else:
